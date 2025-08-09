@@ -1,6 +1,6 @@
-# ANALIZADOR DE HÁBITOS CON IA #
+### ANALIZADOR DE HÁBITOS CON IA 
 
-# Descripción del Proyecto
+## Descripción del Proyecto
 Este proyecto es una aplicación web que permite a los usuarios registrar sus actividades diarias. El sistema, utilizando técnicas de Machine Learning, analiza estos datos para detectar patrones de comportamiento, identificar horas más productivas, y momentos de mayor estrés. Con base en este análisis, la aplicación sugiere mejoras personalizadas para optimizar la rutina diaria del usuario.
 
 # Arquitectura
@@ -17,7 +17,7 @@ El proyecto se divide en dos componentes principales: un Backend construido con 
 -  Arquitectura: Implementa Atomic Design para organizar los componentes de la interfaz de usuario en `atoms`, `molecules`, `organisms` y `templates`, lo que asegura la reutilización y consistencia del diseño.
 -  Estilos: Se utilizan clases de Tailwind CSS para un desarrollo rápido y un diseño responsive.
 
-# ----------------------------- Configuración y Ejecución ------------------------- #
+##  Configuración y Ejecución
 
 # Backend
 1.  Navega a la carpeta `server/`:
@@ -52,7 +52,7 @@ El proyecto se divide en dos componentes principales: un Backend construido con 
 
 ---
 
-# --------------------------------- Actualizar Repositorio y Rama `main` --------------------------------- #
+## Actualizar Repositorio y Rama `main` 
 
 Para actualizar tu repositorio local y subir los cambios a la rama `main` en GitHub, sigue estos pasos desde la **raíz de tu proyecto (`my-project/`)**:
 
