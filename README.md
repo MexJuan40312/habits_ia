@@ -1,4 +1,4 @@
-### ANALIZADOR DE HÁBITOS CON IA 
+## ANALIZADOR DE HÁBITOS CON IA 
 
 ## Descripción del Proyecto
 Este proyecto es una aplicación web que permite a los usuarios registrar sus actividades diarias. El sistema, utilizando técnicas de Machine Learning, analiza estos datos para detectar patrones de comportamiento, identificar horas más productivas, y momentos de mayor estrés. Con base en este análisis, la aplicación sugiere mejoras personalizadas para optimizar la rutina diaria del usuario.
