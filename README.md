@@ -26,7 +26,6 @@ El proyecto se divide en dos componentes principales: un Backend construido con 
 2.  Crea y activa el entorno virtual:
     python -m venv venv
     source venv/bin/activate  # macOS/Linux
-    # o
     venv\Scripts\activate      # Windows
 
 3.  Instala las dependencias:
