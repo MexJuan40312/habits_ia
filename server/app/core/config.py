@@ -1,0 +1,1 @@
+# Configuración de la aplicación y las variables de entorno

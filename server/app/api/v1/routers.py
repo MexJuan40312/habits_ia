@@ -1,0 +1,1 @@
+# Agrupa los endpoints por versión
