@@ -8,7 +8,7 @@ El proyecto se divide en dos componentes principales: un Backend construido con 
 
 # Backend
 -  Tecnologías: Python 3.9+, FastAPI, SQLAlchemy, Uvicorn.
--  Base de Datos: SQLite (configurable para otras bases de datos como PostgreSQL).
+-  Base de Datos: SQLite (configurable para otras bases de datos como PostgreSQL). 
 -  Arquitectura: Sigue un patrón similar a MVC, separando la lógica en modelos (`db/models`), controladores de endpoints (`api/endpoints`) y servicios de negocio (`ml/services`).
 -  ML: El módulo de Machine Learning (`ml/`) está desacoplado del resto de la API para facilitar su mantenimiento y escalabilidad.
 
