@@ -1,23 +1,71 @@
 import axios from 'axios';
 
+const API_URL = 'http://localhost:8000/api/v1';
+
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api/v1',
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    return {
+      Authorization: `Bearer ${token}`,
+    };
+  }
+  return {};
+};
+
 const authService = {
   login: async (email, password) => {
     try {
       const response = await api.post('/users/login', { email, password });
-      // Guardar token de autenticación en localStorage o en el estado global
       return response.data;
     } catch (error) {
-      // Manejo de errores, por ejemplo, si las credenciales son incorrectas
       throw error.response.data.detail || 'Error de inicio de sesión';
+    }
+  },
+  validateToken: async (token) => {
+    try {
+      // Endpoint para validar el token. FastAPI no tiene uno por defecto.
+      // Puedes usar un endpoint que requiera autenticación, como el de obtener el usuario actual.
+      const response = await api.get('/users/me/', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data?.detail || 'Token inválido';
     }
   },
 };
 
-export default authService;
+const habitsService = {
+  getHabits: async (userId) => {
+    try {
+      const response = await api.get(`/users/${userId}/habits/`, {
+        headers: getAuthHeaders(),
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response.data.detail || 'Error al obtener los hábitos';
+    }
+  },
+
+  createHabit: async (habitData) => {
+    try {
+      const response = await api.post('/habits/', habitData, {
+        headers: getAuthHeaders(),
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response.data.detail || 'Error al crear el hábito';
+    }
+  },
+};
+
+export { authService, habitsService };

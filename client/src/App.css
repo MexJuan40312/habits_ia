@@ -50,6 +50,18 @@ html {
   animation: spin 1s linear infinite;
 }
 
+/* Fade in up animation for habit cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Improved button hover states */
 button {
   cursor: pointer;
@@ -64,4 +76,12 @@ input:focus,
 textarea:focus,
 select:focus {
   box-shadow: 0 0 0 2px rgba(31, 41, 55, 0.1);
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow,
+    transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
