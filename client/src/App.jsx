@@ -1,12 +1,15 @@
-
-import './App.css'
+import { Routes, Route } from "react-router-dom"
+import "./App.css"
+import LoginPage from "./pages/LoginPage"
 
 function App() {
-
   return (
-    <>
-      <h1 className='text-2xl display flex justify-center'>Hola mundo desde React</h1>
-    </>
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        {/* Otras rutas a agregar */}
+      </Routes>
+    </div>
   )
 }
 
