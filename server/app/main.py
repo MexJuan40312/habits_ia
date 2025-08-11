@@ -7,20 +7,16 @@ from .core.config import settings
 from .core.database import Base, engine
 from .api.v1.routers import router
 from .db.models import user, habit
-from .ml.recommendations import load_spacy_model
 
 Base.metadata.create_all(bind=engine)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Código que se ejecuta al iniciar la aplicación
-    print("Iniciando la aplicación...")
-    print("Cargando el modelo de SpaCy...")
-    load_spacy_model()
-    print("Modelo de SpaCy cargado correctamente.")
+    # C\u00f3digo que se ejecuta al iniciar la aplicaci\u00f3n
+    print("Iniciando la aplicaci\u00f3n...")
     yield
-    # Código que se ejecuta al cerrar la aplicación
-    print("Cerrando la aplicación...")
+    # C\u00f3digo que se ejecuta al cerrar la aplicaci\u00f3n
+    print("Cerrando la aplicaci\u00f3n...")
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -28,7 +24,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Configuración de CORS
+# Configuraci\u00f3n de CORS
 origins = [
     "http://localhost:5173",
 ]

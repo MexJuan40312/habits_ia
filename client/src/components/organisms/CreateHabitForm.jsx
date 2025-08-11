@@ -1,15 +1,15 @@
-"use client"
-
 import { useState } from "react"
 import FormField from "../molecules/FormField"
 import Button from "../atoms/Button"
-import { Plus, Target, FileText, Sparkles } from "lucide-react"
+import { Plus, Target, FileText, Sparkles, Lightbulb, CheckCircle } from "lucide-react"
 
 const CreateHabitForm = ({ onHabitCreated }) => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [recommendations, setRecommendations] = useState([]) // NUEVO ESTADO para las recomendaciones
+  const [showRecommendations, setShowRecommendations] = useState(false) // NUEVO ESTADO para controlar la visibilidad
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -24,7 +24,9 @@ const CreateHabitForm = ({ onHabitCreated }) => {
     }
 
     try {
-      await onHabitCreated(newHabit)
+      const createdHabitWithRecommendations = await onHabitCreated(newHabit)
+      setRecommendations(createdHabitWithRecommendations.recommendations)
+      setShowRecommendations(true)
       setTitle("")
       setDescription("")
       setShowSuccess(true)
@@ -36,9 +38,14 @@ const CreateHabitForm = ({ onHabitCreated }) => {
     }
   }
 
+  const defaultRecommendations = [
+    "Sé específico con el tiempo y la frecuencia",
+    "Comienza con metas pequeñas y alcanzables",
+    "Vincula el hábito a una rutina existente",
+  ];
+
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      {/* Header */}
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
       <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -51,17 +58,15 @@ const CreateHabitForm = ({ onHabitCreated }) => {
         </div>
       </div>
 
-      {/* Success Message */}
       {showSuccess && (
         <div className="bg-green-50 border-l-4 border-green-400 p-4 m-6 rounded-r-xl">
           <div className="flex items-center">
-            <Sparkles className="w-5 h-5 text-green-400 mr-2" />
+            <CheckCircle className="w-5 h-5 text-green-400 mr-2" />
             <p className="text-green-700 font-medium">¡Hábito creado exitosamente!</p>
           </div>
         </div>
       )}
 
-      {/* Form */}
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
         <FormField
           label="Título del Hábito"
@@ -86,15 +91,28 @@ const CreateHabitForm = ({ onHabitCreated }) => {
           </div>
         </div>
 
-        {/* Tips */}
-        <div className="bg-gray-50 rounded-xl p-4">
-          <h4 className="text-sm font-medium text-gray-900 mb-2">💡 Consejos para un buen hábito:</h4>
-          <ul className="text-sm text-gray-600 space-y-1">
-            <li>• Sé específico con el tiempo y la frecuencia</li>
-            <li>• Comienza con metas pequeñas y alcanzables</li>
-            <li>• Vincula el hábito a una rutina existente</li>
-          </ul>
-        </div>
+        {/* RECOMENDACIONES DINÁMICAS Y ESTÉTICAS */}
+        {showRecommendations && recommendations.length > 0 ? (
+          <div className="bg-blue-50 rounded-xl p-4 transition-all duration-300">
+            <h4 className="text-sm font-bold text-blue-800 flex items-center mb-2">
+              <Lightbulb className="inline-block w-4 h-4 mr-2 text-blue-600" />
+              Sugerencias de la IA:
+            </h4>
+            <ul className="text-sm text-blue-700 space-y-1">
+              {recommendations.map((rec, index) => <li key={index}>• {rec}</li>)}
+            </ul>
+          </div>
+        ) : (
+          <div className="bg-gray-50 rounded-xl p-4">
+            <h4 className="text-sm font-medium text-gray-900 flex items-center mb-2">
+              <Lightbulb className="inline-block w-4 h-4 mr-2 text-yellow-500" />
+              Consejos para un buen hábito:
+            </h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              {defaultRecommendations.map((rec, index) => <li key={index}>• {rec}</li>)}
+            </ul>
+          </div>
+        )}
 
         <Button type="submit" disabled={isLoading || !title.trim() || !description.trim()} className="h-12">
           {isLoading ? (

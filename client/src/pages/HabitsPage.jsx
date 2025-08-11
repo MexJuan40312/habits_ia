@@ -1,49 +1,61 @@
-import { useEffect, useState } from "react"
-import { useAuth } from "../AuthContext"
-import { habitsService } from "../services/api"
-import CreateHabitForm from "../components/organisms/CreateHabitForm"
-import { LogOut, Target, Calendar, Clock, Plus, TrendingUp } from "lucide-react"
+import { useEffect, useState } from "react";
+import { useAuth } from "../AuthContext";
+import { habitsService } from "../services/api";
+import CreateHabitForm from "../components/organisms/CreateHabitForm";
+import HabitCard from "../components/organisms/HabitCard";
+import { LogOut, Target, Calendar, Plus, TrendingUp } from "lucide-react";
 
 const HabitsPage = () => {
-  const { user, token, logout } = useAuth()
-  const [habits, setHabits] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { user, token, logout } = useAuth();
+  const [habits, setHabits] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchHabits = async () => {
     if (!user || !token) {
-      setIsLoading(false)
-      return
+      setIsLoading(false);
+      return;
     }
     try {
-      // Usamos el ID del usuario desde el contexto
       const userHabits = await habitsService.getHabits(user.id);
-      setHabits(userHabits)
+      setHabits(userHabits);
     } catch (err) {
-      console.error("Error al obtener los hábitos:", err)
-      setError(err)
+      console.error("Error al obtener los hábitos:", err);
+      setError(err);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchHabits()
-  }, [user, token])
+    fetchHabits();
+  }, [user, token]);
 
   const handleCreateHabit = async (newHabit) => {
     try {
-      // Se necesita pasar el ID del usuario al crear el hábito
-      const createdHabit = await habitsService.createHabit({ ...newHabit, owner_id: user.id });
-      setHabits([...habits, createdHabit])
-      return Promise.resolve()
+      const createdHabitWithRecommendations = await habitsService.createHabit({ ...newHabit, owner_id: user.id });
+      setHabits([...habits, createdHabitWithRecommendations]);
+      return createdHabitWithRecommendations;
     } catch (err) {
-      console.error("Error al crear el hábito:", err)
-      return Promise.reject(err)
+      console.error("Error al crear el hábito:", err);
+      return Promise.reject(err);
     }
-  }
+  };
 
-  // ... (el resto del componente es el mismo)
+  const handleDeleteHabit = async (habitId) => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este hábito?")) {
+      return;
+    }
+    try {
+      await habitsService.deleteHabit(habitId);
+      setHabits(habits.filter(habit => habit.id !== habitId));
+      console.log(`Hábito con ID ${habitId} eliminado.`);
+    } catch (err) {
+      console.error("Error al eliminar el hábito:", err);
+      setError("No se pudo eliminar el hábito. Inténtalo de nuevo.");
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -159,35 +171,12 @@ const HabitsPage = () => {
             ) : (
               <div className="space-y-4">
                 {habits.map((habit, index) => (
-                  <div
+                  <HabitCard
                     key={habit.id}
-                    className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-200 transform hover:-translate-y-1"
-                    style={{
-                      animationDelay: `${index * 100}ms`,
-                      animation: "fadeInUp 0.5s ease-out forwards",
-                    }}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                            <Target className="w-5 h-5 text-white" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900">{habit.title}</h3>
-                            <p className="text-sm text-gray-500">ID: {habit.id}</p>
-                          </div>
-                        </div>
-                        <p className="text-gray-600 mb-4">{habit.description}</p>
-                        <div className="flex items-center space-x-4 text-sm text-gray-500">
-                          <div className="flex items-center space-x-1">
-                            <Clock className="w-4 h-4" />
-                            <span>Creado recientemente</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    habit={habit}
+                    onDelete={handleDeleteHabit}
+                    index={index}
+                  />
                 ))}
               </div>
             )}

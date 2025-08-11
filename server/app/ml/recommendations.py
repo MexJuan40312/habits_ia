@@ -8,7 +8,12 @@ nlp: Language = None
 def load_spacy_model():
     """Carga el modelo de SpaCy."""
     global nlp
-    nlp = spacy.load("es_core_news_sm")
+    try:
+        nlp = spacy.load("es_core_news_sm")
+    except OSError:
+        print("Descargando modelo 'es_core_news_sm' de SpaCy. Esto puede tardar un momento...")
+        spacy.cli.download("es_core_news_sm")
+        nlp = spacy.load("es_core_news_sm")
 
 def get_habit_recommendations(title: str, description: str) -> list[str]:
     """
@@ -17,13 +22,13 @@ def get_habit_recommendations(title: str, description: str) -> list[str]:
     global nlp
     if nlp is None:
         load_spacy_model()
-        
+    
     recommendations = []
     doc_title = nlp(title.lower())
     doc_description = nlp(description.lower())
 
     # Regla 1: Fomentar la especificidad del hábito
-    vague_keywords = ["ser", "mejorar", "trabajar en", "hacer ejercicio"]
+    vague_keywords = ["ser", "mejorar", "trabajar en", "hacer ejercicio", "hacer"]
     if any(token.text in vague_keywords for token in doc_title) or len(title.split()) < 3:
         recommendations.append("Intenta ser más específico. Por ejemplo, en lugar de 'Hacer ejercicio', prueba con 'Caminar 30 minutos al día'.")
 
@@ -46,9 +51,10 @@ def get_habit_recommendations(title: str, description: str) -> list[str]:
 
     # Regla 4: Recomendaciones positivas (si el hábito es bueno)
     positive_keywords = ["meditar", "leer", "agua", "estirar", "agradecer"]
-    for token in doc_title:
-        if token.text in positive_keywords:
-            recommendations.append(f"¡Excelente elección! Mantener este hábito te ayudará a mejorar tu {token.text} y bienestar general.")
-            break
+    if not recommendations: # Solo añade recomendaciones positivas si no hay otras críticas
+        for token in doc_title:
+            if token.text in positive_keywords:
+                recommendations.append(f"¡Excelente elección! Mantener este hábito te ayudará a mejorar tu {token.text} y bienestar general.")
+                break
 
     return recommendations
