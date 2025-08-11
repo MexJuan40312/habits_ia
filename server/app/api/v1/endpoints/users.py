@@ -30,7 +30,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     return db_user
 
 # ENDPOINT DE AUTENTICACIÓN
-@router.post("/users/login")
+@router.post("/login") # La ruta se ajusta a "/login"
 def login_for_access_token(user_data: UserLogin, db: Session = Depends(get_db)):
     user = db.query(DBUser).filter(DBUser.email == user_data.email).first()
     if not user or not verify_password(user_data.password, user.hashed_password):
@@ -48,12 +48,12 @@ def login_for_access_token(user_data: UserLogin, db: Session = Depends(get_db)):
     return {"access_token": access_token, "token_type": "bearer", "user_id": user.id, "email": user.email}
 
 # NUEVO ENDPOINT PARA OBTENER EL USUARIO ACTUAL (útil para validar tokens)
-@router.get("/users/me/", response_model=UserSchema)
+@router.get("/me/", response_model=UserSchema)
 def read_current_user(current_user: DBUser = Depends(get_current_user)):
     return current_user
 
 # ENDPOINT para obtener los hábitos de un usuario
-@router.get("/users/{user_id}/habits/", response_model=list[HabitSchema])
+@router.get("/{user_id}/habits/", response_model=list[HabitSchema])
 def read_user_habits(
     user_id: int,
     db: Session = Depends(get_db),

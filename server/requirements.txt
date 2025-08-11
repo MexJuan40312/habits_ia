@@ -1,6 +1,9 @@
+# requirements.txt
+
 fastapi
 uvicorn
 sqlalchemy
 pydantic-settings
 python-multipart
 # python-jose[cryptography] passlib[bcrypt] (instalar individualmente si es necesario)
+spacy
