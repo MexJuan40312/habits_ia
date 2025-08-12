@@ -1,7 +1,6 @@
-# app/ml/schemas.py
-
 from typing import List, Optional
 from pydantic import BaseModel
+from datetime import datetime
 
 # --- Esquemas para Usuarios ---
 class UserCreate(BaseModel):
@@ -14,7 +13,7 @@ class User(BaseModel):
 
     class Config:
         from_attributes = True
- 
+
 class UserLogin(BaseModel):
     email: str
     password: str
@@ -33,6 +32,7 @@ class HabitCreate(HabitBase):
 class Habit(HabitBase):
     id: int
     owner_id: int
+    created_at: datetime  # <--- Este campo es necesario y fue agregado aquí.
 
     class Config:
         from_attributes = True

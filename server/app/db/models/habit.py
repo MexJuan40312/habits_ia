@@ -9,8 +9,7 @@ class Habit(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     description = Column(String)
-    start_time = Column(DateTime, default=datetime.utcnow)
-    end_time = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)  # <--- Este campo es el que faltaba.
     
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="habits")

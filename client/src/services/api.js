@@ -1,3 +1,5 @@
+// client/src/services/api.js
+
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8000/api/v1';
@@ -25,7 +27,7 @@ const authService = {
       const response = await api.post('/users/login', { email, password });
       return response.data;
     } catch (error) {
-      throw error.response.data.detail || 'Error de inicio de sesión';
+      throw error.response?.data?.detail || 'Error de inicio de sesión';
     }
   },
   validateToken: async (token) => {
@@ -43,14 +45,14 @@ const authService = {
 };
 
 const habitsService = {
-  getHabits: async (userId) => {
+  getHabits: async () => {
     try {
-      const response = await api.get(`/users/${userId}/habits/`, {
+      const response = await api.get(`/habits/`, {
         headers: getAuthHeaders(),
       });
       return response.data;
     } catch (error) {
-      throw error.response.data.detail || 'Error al obtener los hábitos';
+      throw error.response?.data?.detail || 'Error al obtener los hábitos';
     }
   },
 
@@ -61,7 +63,7 @@ const habitsService = {
       });
       return response.data;
     } catch (error) {
-      throw error.response.data.detail || 'Error al crear el hábito';
+      throw error.response?.data?.detail || 'Error al crear el hábito';
     }
   },
 
@@ -72,9 +74,20 @@ const habitsService = {
       });
       return response.data;
     } catch (error) {
-      throw error.response.data.detail || 'Error al eliminar el hábito';
+      throw error.response?.data?.detail || 'Error al eliminar el hábito';
     }
   },
 };
 
-export { authService, habitsService };
+const aiService = {
+  generateText: async (prompt) => {
+    try {
+      const res = await api.post("/ai/generate_text/", { prompt });
+      return res.data;
+    } catch (error) {
+      throw error.response?.data?.detail || 'Error al generar texto';
+    }
+  }
+};
+
+export { authService, habitsService, aiService };
